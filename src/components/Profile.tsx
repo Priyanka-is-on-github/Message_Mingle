@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
@@ -25,18 +26,16 @@ import { deleteObject } from "firebase/storage";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CloseIcon from "@mui/icons-material/Close";
-import { ChangeContext } from "../pages/Home";
 
 export default function Profile(props: any) {
   const show = true;
   let username: string;
   let userInfo: string;
-  let aboutData;
+  let aboutData: any;
   let useraboutinfo;
 
   const [viewimg, setViewImg] = useState(false);
   const currentUser = useContext(AuthContext);
-  const { setChange } = useContext(ChangeContext);
   const [aboutinfo, setAboutInfo] = useState("");
 
   const { setPopup } = useContext(PopupContext);
@@ -111,7 +110,7 @@ export default function Profile(props: any) {
 
       deleteObject(desertRef)
         .then(() => {
-          setPopup(true);
+          window.location.reload();
         })
         .catch((error) => {
           console.log(error);

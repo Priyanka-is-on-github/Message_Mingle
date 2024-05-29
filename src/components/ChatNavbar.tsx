@@ -13,55 +13,62 @@ import OtherUserProfile from "./OtherUserProfile";
 
 function ChatNavbar() {
   const { data } = useContext(ChatContext);
-  const [otherprofile, setOtherProfile] = useState(false);
+  const [otherprofile, setOtherProfile] = useState<boolean>(false);
 
   return (
-    // {(otherprofile)? <OtherUserProfile/> : null}
+    <>
+      {otherprofile ? (
+        <OtherUserProfile setotherprofile={setOtherProfile} />
+      ) : null}
 
-    <AppBar
-      position="static"
-      sx={{ height: "10%", bgcolor: "var(--third-color)" }}
-    >
-      <Container
-        maxWidth="xl"
-        sx={{ display: "flex", alignItems: "center", height: "100%" }}
+      <AppBar
+        position="static"
+        sx={{ height: "10%", bgcolor: "var(--third-color)" }}
       >
-        <Toolbar disableGutters>
-          <Box sx={{ flexGrow: 0 }}>
-            <IconButton
-              sx={{ p: 0 }}
-              onClick={() => {
-                setOtherProfile(true);
+        <Container
+          maxWidth="xl"
+          sx={{ display: "flex", alignItems: "center", height: "100%" }}
+        >
+          <Toolbar disableGutters>
+            <Box sx={{ flexGrow: 0 }}>
+              <IconButton
+                sx={{ p: 0 }}
+                onClick={() => {
+                  setOtherProfile(true);
+                }}
+              >
+                <Avatar
+                  src={data.user?.photoURL}
+                  sx={{
+                    borderRadius: "50%",
+                    height: "3.5rem",
+                    width: "3.5rem",
+                  }}
+                />
+              </IconButton>
+            </Box>
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              //   href="#app-bar-with-responsive-menu"
+              sx={{
+                mr: 2,
+                ml: 2,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "sans-serif",
+                fontWeight: 700,
+                letterSpacing: ".2rem",
+                color: "inherit",
+                textDecoration: "none",
               }}
             >
-              <Avatar
-                alt="Remy Sharp"
-                src={data.user?.photoURL}
-                sx={{ borderRadius: "50%", height: "3.5rem", width: "3.5rem" }}
-              />
-            </IconButton>
-          </Box>
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            //   href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              ml: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "sans-serif",
-              fontWeight: 700,
-              letterSpacing: ".2rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            {data.user.displayName}
-          </Typography>
-        </Toolbar>
-      </Container>
-    </AppBar>
+              {data.user.displayName}
+            </Typography>
+          </Toolbar>
+        </Container>
+      </AppBar>
+    </>
   );
 }
 

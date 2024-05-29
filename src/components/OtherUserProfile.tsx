@@ -1,62 +1,29 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 
-import { AuthContext } from "../context/AuthContext";
 import { useContext, useState } from "react";
 import "../index.css";
-import EditIcon from "@mui/icons-material/Edit";
 
 import { db } from "../firebase";
-import { doc, updateDoc } from "firebase/firestore";
-
-import { PopupContext } from "./Sidenavbar";
+import { doc, getDoc } from "firebase/firestore";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CloseIcon from "@mui/icons-material/Close";
 import { Avatar, Typography } from "@mui/material";
+import { ChatContext } from "../context/ChatContext";
 
-function OtherUserProfile() {
+function OtherUserProfile({ setotherprofile }: any) {
   const show = true;
-  let username: string;
+  let aboutData: any;
+  let useraboutinfo;
+  const { data } = useContext(ChatContext);
+  const [aboutinfo, setAboutInfo] = useState("");
 
   const [viewimg, setViewImg] = useState(false);
-  const currentUser = useContext(AuthContext);
-
-  const { setPopup } = useContext(PopupContext);
-
-  console.log("currentuser", currentUser);
-  const [isReadOnlyname, setIsReadOnlyname] = useState(true);
-  const [isReadOnlyabout, setIsReadOnlyabout] = useState(true);
-
-  const toggleReadOnlyname = async () => {
-    if (isReadOnlyname === true) {
-      (document.getElementById("username") as HTMLInputElement | null)?.focus();
-      setIsReadOnlyname(false);
-    } else {
-      await updateDoc(doc(db, "users", currentUser.uid), {
-        displayName: username,
-      });
-      setIsReadOnlyname(true);
-      console.log("updated");
-    }
-  };
-
-  const updateUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
-    username = e.target.value;
-    console.log("username=", username);
-  };
-
-  const toggleReadOnlyabout = () => {
-    if (isReadOnlyabout === true) {
-      (document.getElementById("userinfo") as HTMLInputElement | null)?.focus();
-      setIsReadOnlyabout(false);
-    } else {
-      setIsReadOnlyabout(true);
-    }
-  };
 
   useEffect(() => {
     const ignoreClickOnImg = document.getElementsByClassName("profileimg")[0];
@@ -72,20 +39,29 @@ function OtherUserProfile() {
     });
   }, [viewimg]);
 
-  const closeProfile = () => {
-    setPopup(true);
-  };
+  useEffect(() => {
+    (async () => {
+      const userDocRef = doc(db, "aboutUser", data.user.uid);
+
+      try {
+        aboutData = await getDoc(userDocRef);
+      } catch (error) {
+        console.log(error);
+      }
+
+      useraboutinfo =
+        aboutData._document.data.value.mapValue.fields.about.stringValue;
+
+      setAboutInfo(useraboutinfo);
+    })();
+  }, []);
 
   return (
     <>
       {!viewimg ? null : (
         <div className="overlayImg">
           <Box sx={{ position: "absolute", top: "20%", left: "38%" }}>
-            <img
-              alt={currentUser.displayName}
-              src={currentUser.photoURL}
-              className="profileimg"
-            />
+            <img src={data.user?.photoURL} className="profileimg" />
           </Box>{" "}
         </div>
       )}
@@ -123,13 +99,13 @@ function OtherUserProfile() {
               float: "right",
               pt: 1,
             }}
-            onClick={() => closeProfile()}
+            onClick={() => setotherprofile(false)}
           />
 
           <Box sx={{ flexGrow: 0, p: "10px" }}>
             <Avatar
-              alt={currentUser.displayName}
-              src={currentUser.photoURL}
+              // alt={}
+              src={data.user?.photoURL}
               sx={{
                 borderRadius: "50%",
                 height: { lg: "16.5rem", xs: "3rem" },
@@ -144,7 +120,7 @@ function OtherUserProfile() {
                 variant="h6"
                 sx={{ color: "white", fontWeight: 600, letterSpacing: 2 }}
               >
-                Your name
+                Name
               </Typography>
 
               {/* <label htmlFor="username">Your name</label> */}
@@ -159,14 +135,9 @@ function OtherUserProfile() {
                   type="text"
                   className="userinfo"
                   id="username"
-                  defaultValue={currentUser.displayName}
-                  readOnly={isReadOnlyname}
-                  onChange={(e) => updateUsername(e)}
+                  readOnly
+                  value={data.user.displayName}
                 />{" "}
-                <EditIcon
-                  sx={{ fontSize: "25px", cursor: "pointer", mt: 1 }}
-                  onClick={toggleReadOnlyname}
-                />
               </Box>
             </Box>
 
@@ -182,12 +153,9 @@ function OtherUserProfile() {
                   type="text"
                   className="userinfo"
                   id="userinfo"
-                  readOnly={isReadOnlyabout}
+                  readOnly
+                  value={aboutinfo}
                 />{" "}
-                <EditIcon
-                  sx={{ fontSize: "25px", cursor: "pointer" }}
-                  onClick={toggleReadOnlyabout}
-                />
               </Box>
             </Box>
           </Box>

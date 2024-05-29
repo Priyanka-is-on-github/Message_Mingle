@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Sidebar from "../components/Sidebar";
 import Chat from "../components/Chat";
-import { Box, Hidden } from "@mui/material";
+import { Box } from "@mui/material";
 import "../index.css";
 import { createContext, useState } from "react";
 

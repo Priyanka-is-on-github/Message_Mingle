@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Avatar, Box, InputAdornment, InputBase, Paper } from "@mui/material";
 import { SetStateAction, useContext, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
@@ -107,7 +108,7 @@ function Searchbar() {
   };
 
   return (
-    <Box sx={{ height: { md: "10%" } }}>
+    <Box>
       <Paper
         component="form"
         sx={{
@@ -156,7 +157,6 @@ function Searchbar() {
             p: 2,
             pl: 4,
             mr: 3,
-            border: "5px solid blue",
           }}
           onClick={handleSelect}
         >

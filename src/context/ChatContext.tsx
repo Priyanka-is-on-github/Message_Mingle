@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Dispatch, createContext, useContext } from "react";
 
 import { AuthContext } from "./AuthContext";
@@ -19,7 +20,7 @@ type Props = { children: React.ReactNode };
 type StateType = {
   user: any;
   chatId: any;
-  uid?:any ;
+  uid?: any;
 };
 
 type ActionType = {
@@ -30,7 +31,7 @@ type ActionType = {
 export const ChatContextProvider = ({ children }: Props) => {
   const currentUser: any = useContext(AuthContext);
 
-  const INITIAL_STATE: StateType= {
+  const INITIAL_STATE: StateType = {
     chatId: "null",
     user: {},
   };
